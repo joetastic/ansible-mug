@@ -1,0 +1,4 @@
+- hosts: coreos-1
+  sudo: true
+  roles:
+    - hostbase

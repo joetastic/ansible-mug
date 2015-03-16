@@ -1,0 +1,8 @@
+---
+ansible_ssh_user: core
+ansible_python_interpreter: "/opt/bin/python"
+coreos_discovery: https://discovery.etcd.io/351854c5fc6ac8b306908a2bd7358661
+
+# Local Variables:
+# mode: yaml
+# End:

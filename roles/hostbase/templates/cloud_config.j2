@@ -1,0 +1,36 @@
+#cloud-config
+
+{# hostname: {{ inventory_hostname }}.{{ pod }}.{{ domain }} #}
+coreos:
+  units:
+    - name: etcd.service
+      command: start
+    - name: fleet.service
+      command: start
+    - name: scrup.service
+      command: start
+      content: |
+        [Unit]
+        Description=Scrup Service
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        Restart=always
+        ExecStartPre=-/usr/bin/docker kill scrup
+        ExecStartPre=-/usr/bin/docker rm scrup
+        ExecStartPre=/usr/bin/docker pull joetastic/scrup-node-receiver
+        ExecStart=/usr/bin/docker run -p 80:3000 --name scrup joetastic/scrup-node-receiver
+  etcd:
+    name: {{ ansible_hostname }}
+    discovery: {{ coreos_discovery }}
+write_files:
+  - path: /opt/bin/python
+    permissions: 0755
+    content: |
+      #!/bin/bash
+      toolbox -q --bind=/home:/home python "$@"
+
+{# Local Variables: #}
+{# mode: yaml #}
+{# End: #}
